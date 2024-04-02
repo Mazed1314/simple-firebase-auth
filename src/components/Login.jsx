@@ -2,9 +2,19 @@ import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Providers/AuthProvider";
 const Login = () => {
-  const { signInUser } = useContext(AuthContext);
+  const { signInUser, signInWithGoogle } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const handleGoogle = (e) => {
+    signInWithGoogle()
+      .then((userCredential) => {
+        console.log(userCredential.user);
+        e.target.reset();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
   const handleLogin = (e) => {
     e.preventDefault();
     const email = e.target.email.value;
@@ -15,7 +25,7 @@ const Login = () => {
       .then((userCredential) => {
         console.log(userCredential.user);
         e.target.reset();
-        navigate("/table");
+        navigate("/profile");
       })
       .catch((error) => {
         console.error(error);
@@ -28,7 +38,7 @@ const Login = () => {
           <h1 className="text-5xl font-bold">Login now!</h1>
         </div>
         <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-          <form onSubmit={handleLogin} className="card-body">
+          <form onSubmit={handleLogin} className="card-body pb-0">
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Email</span>
@@ -67,6 +77,12 @@ const Login = () => {
             <Link to="/register">
               <button className="btn btn-active btn-link">Register</button>
             </Link>
+          </p>
+          <p className="text-center">or</p>
+          <p className="flex justify-center">
+            <a onClick={handleGoogle} className="btn btn-sm my-2">
+              Login With Google
+            </a>
           </p>
         </div>
       </div>
